@@ -38,4 +38,4 @@ void* malloc(uint);
 void free(void*);
 int atoi(const char*);
 
-int set_limit(void);
+int set_limit(int limit);
