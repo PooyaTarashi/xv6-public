@@ -101,10 +101,9 @@ sys_set_limit(void)
 
   struct proc *p = myproc();
   p->has_limit = 1;
-  acquire(&tickslock);
-  p->last_sch = ticks;
-  release(&tickslock);
+  p->last_sec = ticks;
   p->limit = limit * 10;
+  p->time_this_session = 0;
 
   return 0;
 }

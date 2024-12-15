@@ -349,14 +349,21 @@ scheduler(void)
       // acquire(&tickslock);
       uint curr_time = ticks;
 
-      if (p->has_limit == 1 && curr_time < p->last_sch + 1000)
+      if (p->has_limit == 1 && p->time_this_session >= p->limit && curr_time < p->last_sec + 1000)
         continue;
 
       // release(&tickslock);
       
 
       if (p->has_limit == 1)
-        p->last_sch = curr_time;
+      {
+        if (curr_time >= p->last_sec + 1000)
+        {
+          p->last_sec = curr_time;
+          p->time_this_session = 0;
+        }
+        else p->time_this_session += 1;
+      }
       
 
       // Switch to chosen process.  It is the process's job

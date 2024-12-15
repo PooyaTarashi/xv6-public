@@ -12,6 +12,15 @@ long long str_to_ll(const char *str) {
     return result;
 }
 
+int str_to_int(const char *str) {
+    int result = 0;
+    while (*str) {
+        result = result * 10 + (*str - '0');  // Convert char to digit and accumulate
+        str++;
+    }
+    return result;
+}
+
 int main(int argc, char *argv[]) 
 { 
     if (argc < 2) {
@@ -19,12 +28,13 @@ int main(int argc, char *argv[])
         exit();
     }
 
-    long long n = str_to_ll(argv[1]);
+    int limit = str_to_int(argv[1]);
+    long long n = str_to_ll(argv[2]);
 
 
-    set_limit(10);
+    set_limit(limit);
     for (long long i = 0; i < n; i++) {
-        printf(1, "%lld\n", i);  // Use %lld for long long values
+        printf(1, "testing...\n");  // Use %lld for long long values
     }
 
     exit(); 

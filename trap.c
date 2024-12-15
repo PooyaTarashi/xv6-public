@@ -113,7 +113,7 @@ trap(struct trapframe *tf)
   struct proc *p = myproc();
 
   if (!p) return;
-  if (p->has_limit && curr_time - p->last_sch >= p->limit)
+  if (p->has_limit && p->time_this_session > p->limit && curr_time - p->last_sec < 1000)
     yield();
 
   // Check if the process has been killed since we yielded
