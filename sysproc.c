@@ -89,3 +89,22 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+int
+sys_set_limit(void)
+{
+  int limit;
+
+  if (argint(0, &limit) < 0)
+    return -1;
+
+  struct proc *p = myproc();
+  p->has_limit = 1;
+  acquire(&tickslock);
+  p->last_sch = ticks;
+  release(&tickslock);
+  p->limit = limit * 10;
+
+  return 0;
+}

@@ -6,6 +6,9 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include <stdio.h>
+#include <sys/time.h>
+#include <stdbool.h>
 
 struct {
   struct spinlock lock;
@@ -311,6 +314,12 @@ wait(void)
   }
 }
 
+// long long current_time_in_ms() {
+//     struct timeval tv;
+//     gettimeofday(&tv, NULL);
+//     return tv.tv_sec * 1000LL + tv.tv_usec / 1000; // Convert to milliseconds
+// }
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
@@ -335,6 +344,20 @@ scheduler(void)
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
+
+      // long long curr_time = current_time_in_ms();
+      // acquire(&tickslock);
+      uint curr_time = ticks;
+
+      if (p->has_limit == 1 && curr_time < p->last_sch + 1000)
+        continue;
+
+      // release(&tickslock);
+      
+
+      if (p->has_limit == 1)
+        p->last_sch = curr_time;
+      
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it

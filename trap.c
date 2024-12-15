@@ -106,6 +106,16 @@ trap(struct trapframe *tf)
      tf->trapno == T_IRQ0+IRQ_TIMER)
     yield();
 
+  // long long curr_time = current_time_in_ms_2();
+  // acquire(&tickslock);
+  uint curr_time = ticks;
+  // release(&tickslock);
+  struct proc *p = myproc();
+
+  if (!p) return;
+  if (p->has_limit && curr_time - p->last_sch >= p->limit)
+    yield();
+
   // Check if the process has been killed since we yielded
   if(myproc() && myproc()->killed && (tf->cs&3) == DPL_USER)
     exit();
